@@ -1,0 +1,170 @@
+// Prisma schema for "Buy and Sell" College Marketplace
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  name            String
+  passwordHash    String?
+  avatarUrl       String?
+  department      String?        // e.g. "Computer Science & Engineering"
+  graduationYear  Int?           // e.g. 2026
+  hostelBlock     String?        // e.g. "Hall 4, B-Wing"
+  phone           String?
+  isEmailVerified Boolean        @default(false)
+  role            String         @default("STUDENT") // "STUDENT", "ADMIN"
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  listings        Listing[]
+  requests        WantedRequest[]
+  sentOffers      Offer[]        @relation("BuyerOffers")
+  chatsAsBuyer    ChatRoom[]     @relation("BuyerChats")
+  chatsAsSeller   ChatRoom[]     @relation("SellerChats")
+  messages        ChatMessage[]
+  reviewsGiven    Review[]       @relation("ReviewsGiven")
+  reviewsReceived Review[]       @relation("ReviewsReceived")
+  reportsFiled    Report[]       @relation("Reporter")
+  savedListings   SavedListing[]
+}
+
+model OtpVerification {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Listing {
+  id             String         @id @default(uuid())
+  title          String
+  description    String
+  category       String         // "Textbooks", "Electronics", "Dorm Essentials", "Transport", "Fashion & Sports", "Free / Giveaway"
+  condition      String         // "Brand New", "Like New", "Good", "Fair"
+  price          Float          // 0 if giveaway
+  isNegotiable   Boolean        @default(true)
+  isGiveaway     Boolean        @default(false)
+  meetupLocation String         // e.g. "Central Library Lawn", "Student Activity Center"
+  status         String         @default("ACTIVE") // "ACTIVE", "RESERVED", "SOLD", "ARCHIVED"
+  viewCount      Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  sellerId       String
+  seller         User           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  images         ListingImage[]
+  chatRooms      ChatRoom[]
+  offers         Offer[]
+  savedBy        SavedListing[]
+  reports        Report[]
+}
+
+model ListingImage {
+  id        String   @id @default(uuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+}
+
+model WantedRequest {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  category     String
+  targetBudget Float?
+  urgency      String   @default("NORMAL") // "LOW", "NORMAL", "URGENT"
+  status       String   @default("OPEN")   // "OPEN", "FULFILLED", "CLOSED"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatRoom {
+  id            String        @id @default(uuid())
+  listingId     String
+  listing       Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId       String
+  buyer         User          @relation("BuyerChats", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId      String
+  seller        User          @relation("SellerChats", fields: [sellerId], references: [id], onDelete: Cascade)
+  lastMessageAt DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+
+  messages      ChatMessage[]
+  offers        Offer[]
+
+  @@unique([listingId, buyerId])
+}
+
+model ChatMessage {
+  id          String   @id @default(uuid())
+  chatRoomId  String
+  chatRoom    ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  senderId    String
+  sender      User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content     String
+  messageType String   @default("TEXT") // "TEXT", "OFFER_PROPOSAL", "OFFER_ACCEPTED", "SYSTEM"
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Offer {
+  id         String   @id @default(uuid())
+  chatRoomId String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  listingId  String
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyerId    String
+  buyer      User     @relation("BuyerOffers", fields: [buyerId], references: [id], onDelete: Cascade)
+  amount     Float
+  status     String   @default("PENDING") // "PENDING", "ACCEPTED", "DECLINED", "COUNTERED", "EXPIRED"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int      // 1 to 5
+  comment    String?
+  tags       String?  // JSON string or comma-separated tags e.g. "Prompt meetup,Honest description"
+  reviewerId String
+  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  targetId   String
+  target     User     @relation("ReviewsReceived", fields: [targetId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model SavedListing {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+}
+
+model Report {
+  id         String   @id @default(uuid())
+  reporterId String
+  reporter   User     @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  listingId  String?
+  listing    Listing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  reason     String
+  details    String?
+  status     String   @default("PENDING") // "PENDING", "RESOLVED", "DISMISSED"
+  createdAt  DateTime @default(now())
+}
