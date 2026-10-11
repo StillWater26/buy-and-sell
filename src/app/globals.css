@@ -1,0 +1,405 @@
+/* ==========================================================================
+   Buy & Sell - Monochrome Graphite & Paper Sketchy Design System
+   Hand-drawn wobbly outlines, pencil offset shadows, college notebook aesthetic
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Canvas & Paper Tones */
+  --paper-bg: #fbfbfa;
+  --paper-card: #ffffff;
+  --paper-card-subtle: #f8f8f6;
+  --paper-input: #ffffff;
+
+  /* Graphite Lines & Borders */
+  --graphite-dark: #1e293b;
+  --graphite-medium: #334155;
+  --graphite-light: #64748b;
+  --graphite-subtle: #cbd5e1;
+
+  /* Monochromatic Accents */
+  --ink-primary: #0f172a;
+  --ink-secondary: #475569;
+  --ink-muted: #64748b;
+
+  /* Accent Highlights (Pencil shading & subtle college ink markers) */
+  --sketch-highlight-yellow: #fef08a;
+  --sketch-highlight-blue: #e0f2fe;
+  --sketch-highlight-green: #dcfce7;
+  --sketch-highlight-rose: #ffe4e6;
+  --sketch-highlight-gray: #f1f5f9;
+
+  /* Typography */
+  --font-sketch-display: 'Kalam', cursive, sans-serif;
+  --font-sketch-accent: 'Patrick Hand', cursive, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Hand-drawn Wobbly Border Radiuses */
+  --wobble-card: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --wobble-btn: 255px 25px 225px 25px / 25px 225px 25px 255px;
+  --wobble-pill: 255px 50px 225px 50px / 50px 225px 50px 225px;
+  --wobble-subtle: 20px 225px 20px 255px / 225px 20px 255px 20px;
+
+  /* Sketch Offset Drop Shadows (tactile paper depth) */
+  --shadow-sketch-sm: 2px 2px 0px var(--graphite-dark);
+  --shadow-sketch-md: 3px 3px 0px var(--graphite-dark);
+  --shadow-sketch-lg: 5px 5px 0px var(--graphite-dark);
+  --shadow-sketch-hover: 4px 4px 0px var(--graphite-dark);
+
+  --max-width: 1240px;
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper-bg);
+  /* Subtle graphite dot-matrix notebook grid */
+  background-image: radial-gradient(var(--graphite-subtle) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+  color: var(--ink-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sketch-display);
+  font-weight: 700;
+  color: var(--graphite-dark);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+/* Layout Containers */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.main-content {
+  min-height: calc(100vh - 72px - 220px);
+  padding: 2rem 0 4rem;
+}
+
+/* Sketch Navbar Header */
+.glass-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper-card);
+  border-bottom: 2px solid var(--graphite-dark);
+  box-shadow: 0 4px 0px rgba(30, 41, 59, 0.08);
+}
+
+/* Sketch Panels & Cards */
+.glass-panel {
+  background: var(--paper-card);
+  border: 2px solid var(--graphite-dark);
+  border-radius: var(--wobble-card);
+  box-shadow: var(--shadow-sketch-md);
+  transition: all 0.2s ease;
+}
+
+.sketch-card {
+  background: var(--paper-card);
+  border: 2px solid var(--graphite-dark);
+  border-radius: var(--wobble-card);
+  box-shadow: var(--shadow-sketch-md);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sketch-card:hover {
+  transform: translate(-2px, -2px) rotate(-0.3deg);
+  box-shadow: var(--shadow-sketch-lg);
+}
+
+/* Hand-Drawn Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sketch-display);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--wobble-btn);
+  border: 2px solid var(--graphite-dark);
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  background: var(--paper-card);
+  color: var(--graphite-dark);
+  box-shadow: var(--shadow-sketch-sm);
+}
+
+.btn:hover {
+  transform: translate(-1px, -1px) rotate(-0.5deg);
+  box-shadow: var(--shadow-sketch-hover);
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--graphite-dark);
+}
+
+.btn-primary {
+  background: var(--graphite-dark);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--ink-primary);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: var(--paper-card);
+  color: var(--graphite-dark);
+}
+
+.btn-secondary:hover {
+  background: var(--sketch-highlight-gray);
+}
+
+.btn-emerald {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.btn-emerald:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 2px dashed transparent;
+  box-shadow: none;
+  color: var(--ink-secondary);
+}
+
+.btn-ghost:hover {
+  border-color: var(--graphite-subtle);
+  background: rgba(0, 0, 0, 0.03);
+  box-shadow: none;
+}
+
+.btn-danger {
+  background: var(--sketch-highlight-rose);
+  color: #991b1b;
+  border-color: var(--graphite-dark);
+}
+
+.btn-danger:hover {
+  background: #f87171;
+  color: #ffffff;
+}
+
+/* Sketch Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-sketch-accent);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border: 1.5px solid var(--graphite-dark);
+  border-radius: var(--wobble-pill);
+  background: var(--paper-card);
+  color: var(--graphite-dark);
+  box-shadow: 1.5px 1.5px 0px var(--graphite-dark);
+}
+
+.badge-campus {
+  background: var(--sketch-highlight-blue);
+  color: var(--graphite-dark);
+}
+
+.badge-verified {
+  background: var(--sketch-highlight-green);
+  color: #14532d;
+}
+
+.badge-giveaway {
+  background: var(--sketch-highlight-yellow);
+  color: #713f12;
+  border-style: dashed;
+}
+
+.badge-condition {
+  background: var(--paper-card-subtle);
+  color: var(--graphite-medium);
+}
+
+.badge-location {
+  background: #fef3c7;
+  color: #78350f;
+}
+
+.badge-reserved {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+.badge-sold {
+  background: #e2e8f0;
+  color: #475569;
+  text-decoration: line-through;
+}
+
+/* Sketch Form Controls */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  font-family: var(--font-sketch-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--graphite-dark);
+}
+
+.form-helper {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: var(--paper-input);
+  border: 2px solid var(--graphite-dark);
+  border-radius: var(--wobble-card);
+  color: var(--ink-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: all 0.15s ease;
+  outline: none;
+  box-shadow: 2px 2px 0px var(--graphite-dark);
+}
+
+.form-control:focus {
+  border-color: var(--graphite-dark);
+  box-shadow: 4px 4px 0px var(--graphite-dark);
+  transform: translate(-1px, -1px);
+}
+
+.form-control::placeholder {
+  color: #94a3b8;
+  font-family: var(--font-sketch-accent);
+  font-size: 1rem;
+}
+
+/* Sketch Listing Cards */
+.listing-card {
+  background: var(--paper-card);
+  border: 2px solid var(--graphite-dark);
+  border-radius: var(--wobble-card);
+  box-shadow: var(--shadow-sketch-md);
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.listing-card:hover {
+  transform: translate(-2px, -3px) rotate(-0.4deg);
+  box-shadow: var(--shadow-sketch-lg);
+}
+
+.listing-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #f1f5f9;
+  border-bottom: 2px solid var(--graphite-dark);
+  overflow: hidden;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listing-card:hover .listing-image {
+  transform: scale(1.03);
+}
+
+.listing-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.listing-price {
+  font-family: var(--font-sketch-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--graphite-dark);
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.listing-title {
+  font-family: var(--font-sketch-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0.4rem 0 0.6rem;
+  color: var(--graphite-dark);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Grid Layout */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+}
+
+@media (max-width: 640px) {
+  .listings-grid {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding: 0 1rem;
+  }
+}
